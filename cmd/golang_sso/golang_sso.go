@@ -16,7 +16,7 @@ import (
 	"os/signal"
 	"net/http"
 	"log"
-	"golang.org/x/sys/windows"
+	//"golang.org/x/sys/windows"
 	"zengzhihai.com/golang_sso/kernel/zengzhihai_pipeline"
 )
 
