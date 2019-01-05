@@ -9,9 +9,10 @@ import (
 	"runtime/debug"
 	"zengzhihai.com/golang_sso/kernel/comm_log"
 	"zengzhihai.com/golang_sso/kernel/zconst"
+	"os"
 )
 
-var store = sessions.NewCookieStore([]byte("session-name"))
+var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 type LoginSsoFilter struct {
 }
@@ -45,7 +46,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 	req.UserId = 1
 	req.UserName = reqParam.Req.PostFormValue("username")
 	req.Password = reqParam.Req.PostFormValue("password")
-	session, err := store.Get(reqParam.Req, "session-name")
+	session, err := store.Get(reqParam.Req, "SESSION_KEY")
 	if err != nil {
 		tLog := make(map[string]interface{})
 		tLog["error"] = fmt.Sprintf("request error：%+v", err)
@@ -57,7 +58,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 	}
 	session.Options = &sessions.Options{
 		Path:     "/",
-		Domain:   "192.168.0.123",
+		Domain:   "test.zengzhihai.com",
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
