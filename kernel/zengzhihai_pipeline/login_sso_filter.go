@@ -30,7 +30,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 	if !ok {
 		res.Msg = zconst.RES_SERVER_EXCEPTION_MSG
 		res.Code = zconst.RES_SERVER_EXCEPTION
-		return util.DataToCommJsonStr(res), errors.New("LoginSsoFilter input type should be http.Request")
+		return util.DataToStr(res), errors.New("LoginSsoFilter input type should be http.Request")
 	}
 	defer func() {
 		if r := recover(); r != nil {
@@ -54,7 +54,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		comm_log.Error(reqParam.TrackId, string(jsonLog))
 		res.Msg = zconst.RES_COMMON_MSG
 		res.Code = zconst.RES_COMMON
-		return util.DataToCommJsonStr(res), nil
+		return util.DataToStr(res), nil
 	}
 	session.Options = &sessions.Options{
 		Path:     "/",
@@ -65,12 +65,12 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 	if req.UserName != "zengzhihai" {
 		res.Msg = zconst.RES_ACOUNT_MSG
 		res.Code = zconst.RES_ACOUNT
-		return util.DataToCommJsonStr(res), nil
+		return util.DataToStr(res), nil
 	}
 	if req.Password != "zengzhihai" {
 		res.Msg = zconst.RES_PASSWORD_MSG
 		res.Code = zconst.RES_PASSWORD
-		return util.DataToCommJsonStr(res), nil
+		return util.DataToStr(res), nil
 	}
 	session.Values["username"] = req.UserName
 	session.Values["userid"] = req.UserId
@@ -79,14 +79,14 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		http.Redirect(reqParam.Res, reqParam.Req, zconst.LOGIN_SUC, 302)
 		res.Msg = zconst.RES_SUCCESS_MSG
 		res.Code = zconst.RES_SUCCESS
-		return util.DataToCommJsonStr(res), nil
+		return util.DataToStr(res), nil
 	} else {
 		res.Msg = zconst.RES_AUTH_MSG
 		res.Code = zconst.RES_AUTH
-		return util.DataToCommJsonStr(res), nil
+		return util.DataToStr(res), nil
 	}
 
 	res.Msg = zconst.RES_COMMON_MSG
 	res.Code = zconst.RES_COMMON
-	return util.DataToCommJsonStr(res), nil
+	return util.DataToStr(res), nil
 }
