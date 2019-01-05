@@ -9,10 +9,10 @@ import (
 	"runtime/debug"
 	"zengzhihai.com/golang_sso/kernel/comm_log"
 	"zengzhihai.com/golang_sso/kernel/zconst"
-	"os"
+	"net/http"
 )
 
-var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
 
 type LoginSsoFilter struct {
 }
@@ -62,10 +62,19 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
-	fmt.Println(session.Values)
 	session.Values["username"] = req.UserName
 	session.Values["userid"] = req.UserId
-	session.Save(reqParam.Req, reqParam.Res)
+	err = session.Save(reqParam.Req, reqParam.Res)
+	if err == nil {
+		http.Redirect(reqParam.Res, reqParam.Req, zconst.LOGIN_SUC, 302)
+		res.Msg = zconst.RES_SUCCESS_MSG
+		res.Code = zconst.RES_SUCCESS
+		return util.DataToCommJsonStr(res), nil
+	} else {
+		res.Msg = zconst.RES_AUTH_MSG
+		res.Code = zconst.RES_AUTH
+		return util.DataToCommJsonStr(res), nil
+	}
 
 	res.Msg = zconst.RES_COMMON_MSG
 	res.Code = zconst.RES_COMMON

@@ -9,7 +9,8 @@ func init() {
 }
 
 const (
-	LOGINSSO = "/member/login_sso"
+	LOGINSSO  = "/member/login_sso"
+	LOGIN_SUC = "/member/succ"
 )
 
 const (
@@ -21,4 +22,7 @@ const (
 
 	RES_COMMON     = 99
 	RES_COMMON_MSG = "common exception"
+
+	RES_AUTH     = 10000
+	RES_AUTH_MSG = "auth exception"
 )
