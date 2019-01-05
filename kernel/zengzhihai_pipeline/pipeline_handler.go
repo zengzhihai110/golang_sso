@@ -33,12 +33,12 @@ func (self *BusinessHandler) ServeHTTP(c http.ResponseWriter, req *http.Request)
 	//catch panic
 	defer func() {
 		if r := recover(); r != nil {
-			comm_log.Error(trackId, util.ToCommJsonError("http error ", r))
+			comm_log.Error(trackId, util.DataToCommJsonStr("http error ", r))
 			c.WriteHeader(500)
 			res := new(util.ReturnResult)
 			res.Msg = zconst.RES_SERVER_EXCEPTION_MSG
 			res.Code = zconst.RES_SERVER_EXCEPTION
-			io.WriteString(c, *sutil.InterfaceToStr(res))
+			io.WriteString(c, *util.DataToStr(res))
 		}
 	}()
 
@@ -50,15 +50,16 @@ func (self *BusinessHandler) ServeHTTP(c http.ResponseWriter, req *http.Request)
 	}
 
 	//重新传输参数
-	reqParam := new(sutil.ReqParam)
+	reqParam := new(util.ReqParam)
 	reqParam.TrackId = trackId
 	reqParam.Req = req
+	reqParam.Res = c
 
 	//business process
 	ret, err := self.Pipeline.Process(reqParam)
 	if err != nil {
 		//add log
-		comm_log.Error(trackId, sutil.ToCommJsonError("error with: "+err.Error()))
+		comm_log.Error(trackId, util.DataToCommJsonStr("error with: "+err.Error()))
 		c.WriteHeader(500)
 	}
 	c.Header().Set("Content-Type", "application/json")

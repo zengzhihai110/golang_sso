@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"log"
 	"golang.org/x/sys/windows"
+	"zengzhihai.com/golang_sso/kernel/zengzhihai_pipeline"
 )
 
 var (
@@ -32,7 +33,6 @@ func main() {
 	if err != nil {
 		log.Fatal("服务启动出错", "打开异常日志文件失败", err)
 	}
-	fmt.Println(runtime.GOOS)
 	if runtime.GOOS == "windows" {
 		// 将进程标准出错重定向至文件，进程崩溃时运行时将向该文件记录协程调用栈信息
 		windows.SetStdHandle(windows.STD_ERROR_HANDLE, windows.Handle(logFile.Fd()))
@@ -73,6 +73,17 @@ func main() {
 				debug.PrintStack()
 			}
 		}()
+
+		//loginsso
+		LoginSso, err := zengzhihai_pipeline.CreateHandler(zengzhihai_pipeline.LoginSso)
+		if err != nil {
+			tLog = make(map[string]interface{})
+			tLog["data"] = "CreateHanler error: " + err.Error()
+			jsonLog, _ = json.Marshal(tLog)
+			comm_log.Error(zconst.InitTrackId, string(jsonLog))
+			exit <- syscall.SIGTERM
+		}
+		http.Handle(zconst.LOGINSSO, &LoginSso)
 
 		if err := http.ListenAndServe(address, nil); err != nil {
 			tLog = make(map[string]interface{})
