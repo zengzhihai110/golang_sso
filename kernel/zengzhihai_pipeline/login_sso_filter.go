@@ -62,6 +62,16 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		MaxAge:   86400 * 7,
 		HttpOnly: true,
 	}
+	if req.UserName != "zengzhihai" {
+		res.Msg = zconst.RES_ACOUNT_MSG
+		res.Code = zconst.RES_ACOUNT
+		return util.DataToCommJsonStr(res), nil
+	}
+	if req.Password != "zengzhihai" {
+		res.Msg = zconst.RES_PASSWORD_MSG
+		res.Code = zconst.RES_PASSWORD
+		return util.DataToCommJsonStr(res), nil
+	}
 	session.Values["username"] = req.UserName
 	session.Values["userid"] = req.UserId
 	err = session.Save(reqParam.Req, reqParam.Res)

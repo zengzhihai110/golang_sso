@@ -25,4 +25,10 @@ const (
 
 	RES_AUTH     = 10000
 	RES_AUTH_MSG = "auth exception"
+
+	RES_ACOUNT     = 10001
+	RES_ACOUNT_MSG = "aount is error"
+
+	RES_PASSWORD     = 10002
+	RES_PASSWORD_MSG = "password is error"
 )
