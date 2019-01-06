@@ -10,6 +10,7 @@ import (
 	"zengzhihai.com/golang_sso/kernel/comm_log"
 	"zengzhihai.com/golang_sso/kernel/zconst"
 	"net/http"
+	"regexp"
 )
 
 var store = sessions.NewCookieStore([]byte("SESSION_KEY"))
@@ -21,6 +22,7 @@ type LoginSsoParam struct {
 	UserId   int64
 	UserName string
 	Password string
+	ReBack   string
 }
 
 func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
@@ -72,11 +74,22 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		res.Code = zconst.RES_PASSWORD
 		return util.DataToStr(res), nil
 	}
+	bool, err := regexp.Match("(http|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?", []byte(req.ReBack))
+	if bool || err != nil {
+		res.Msg = zconst.RES_REURL_MSG
+		res.Code = zconst.RES_REURL
+		return util.DataToStr(res), nil
+	}
+	if req.ReBack == "" {
+		res.Msg = zconst.RES_REURL_MSG
+		res.Code = zconst.RES_REURL
+		return util.DataToStr(res), nil
+	}
 	session.Values["username"] = req.UserName
 	session.Values["userid"] = req.UserId
 	err = session.Save(reqParam.Req, reqParam.Res)
 	if err == nil {
-		http.Redirect(reqParam.Res, reqParam.Req, zconst.LOGIN_SUC, 302)
+		http.Redirect(reqParam.Res, reqParam.Req, req.ReBack, 302)
 		res.Msg = zconst.RES_SUCCESS_MSG
 		res.Code = zconst.RES_SUCCESS
 		return util.DataToStr(res), nil

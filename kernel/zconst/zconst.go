@@ -31,4 +31,7 @@ const (
 
 	RES_PASSWORD     = 10002
 	RES_PASSWORD_MSG = "password is error"
+
+	RES_REURL     = 10003
+	RES_REURL_MSG = "return url is error"
 )
