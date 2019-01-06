@@ -76,7 +76,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 		return util.DataToStr(res), nil
 	}
 	bool, err := regexp.Match("(http|https)://[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?", []byte(req.ReBack))
-	if bool || err != nil {
+	if bool == false || err != nil {
 		res.Msg = zconst.RES_REURL_MSG
 		res.Code = zconst.RES_REURL
 		return util.DataToStr(res), nil
