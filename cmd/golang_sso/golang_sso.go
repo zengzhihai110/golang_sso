@@ -37,7 +37,7 @@ func main() {
 		// 将进程标准出错重定向至文件，进程崩溃时运行时将向该文件记录协程调用栈信息
 		//windows.SetStdHandle(windows.STD_ERROR_HANDLE, windows.Handle(logFile.Fd()))
 	} else {
-		syscall.Dup2(int(logFile.Fd()), 2)
+		syscall.Dup2(int(logFile.Fd()), int(os.Stderr.Fd()))
 	}
 
 	//加载图标
