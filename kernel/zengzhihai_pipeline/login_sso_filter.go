@@ -48,6 +48,7 @@ func (this *LoginSsoFilter) Process(data interface{}) (interface{}, error) {
 	req.UserId = 1
 	req.UserName = reqParam.Req.PostFormValue("username")
 	req.Password = reqParam.Req.PostFormValue("password")
+	req.ReBack = reqParam.Req.PostFormValue("reback")
 	session, err := store.Get(reqParam.Req, "SESSION_KEY")
 	if err != nil {
 		tLog := make(map[string]interface{})
