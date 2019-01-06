@@ -9,8 +9,7 @@ func init() {
 }
 
 const (
-	LOGINSSO  = "/member/login_sso"
-	LOGIN_SUC = "/member/succ"
+	LOGINSSO = "/member/login_sso"
 )
 
 const (
